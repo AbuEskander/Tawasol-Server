@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User.js");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const { auth } = require("../utils/index.js");
 
 router.post(
   "/register",
@@ -97,30 +98,7 @@ router.post(
     }
   }
 );
-const auth = (req, res, next) => {
-  const token = req.header("x-auth-token");
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ msg: "Token is not available , authoriaztion denied." });
-  }
-  try {
-    jwt.verify(token, config.get("jwtSecret"), (error, decoded) => {
-      if (error) {
-        return res
-          .status(401)
-          .json({ msg: "Token is not valid , authoriaztion denied." });
-      } else {
-        req.user = decoded.user;
-        next();
-      }
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: err.message });
-  }
-};
 router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
