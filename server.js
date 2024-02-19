@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use("/api/users", require("./Routes/users"));
 app.use("/api/profiles", require("./Routes/profiles"));
-// app.use("/api/posts", require("./Routes/posts"));
+app.use("/api/posts", require("./Routes/posts"));
 
 connectDB();
 
